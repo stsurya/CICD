@@ -32,3 +32,10 @@ jobs:
       run: sudo apt install gitleaks -y
     - name: Gitleaks Code Scan
       run: gitleaks detect source . -r gitleaks-report.json -f json
+
+    - name: Upload Build Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: java-app
+        path: target/*.jar
+
