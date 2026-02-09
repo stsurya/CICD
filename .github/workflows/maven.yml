@@ -27,3 +27,8 @@ jobs:
         cache: maven
     - name: Build with Maven
       run: mvn -B package --file pom.xml
+
+    - name: Gitleaks Installation
+      run: sudo apt install gitleaks -y
+    - name: Gitleaks Code Scan
+      run: gitleaks detect source . -r gitleaks-report.json -f json
