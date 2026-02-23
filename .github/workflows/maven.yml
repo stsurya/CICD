@@ -10,6 +10,7 @@ permissions:
   contents: read
 jobs:
   build-and-deploy:
+    environment: dev
     runs-on: ubuntu-latest
     steps:
       - name: Azure login
