@@ -1,9 +1,7 @@
-# File: .github/workflows/workflow.yml
-# Added comments
-name: Run Azure Login with OIDC
+name: Manual Workflow
+
 on:
-  push:
-    branches: ["main"]
+  workflow_dispatch:
     
 permissions:
   id-token: write
