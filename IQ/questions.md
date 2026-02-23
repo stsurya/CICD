@@ -459,3 +459,186 @@ org/reusable-pipelines/.github/workflows/deploy.yml
 | Step reuse         | ⚠️                | ✅                |
 
 ---
+
+## 4. In **GitHub Actions YAML**, `inputs` and `with` are related but used in **different places and purposes**.
+
+---
+
+### 1. `inputs` — Define Parameters (Declaration)
+
+`inputs` are used to **define parameters** that a workflow or action can receive.
+
+They are like **function arguments definition**.
+
+You declare them when:
+
+* Creating a **reusable workflow**
+* Creating a **custom action**
+* Manual workflow trigger (`workflow_dispatch`)
+
+---
+
+### Example — Manual Workflow Inputs
+
+```yaml id="eq4n3u"
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Deployment environment"
+        required: true
+        default: dev
+```
+
+Here:
+
+* `environment` is an **input parameter**
+* User provides value when running workflow manually.
+
+Access it using:
+
+```yaml id="a0d4ph"
+${{ inputs.environment }}
+```
+
+---
+
+### Example — Reusable Workflow Inputs
+
+```yaml id="6v8i8l"
+on:
+  workflow_call:
+    inputs:
+      app-name:
+        required: true
+        type: string
+```
+
+This workflow now expects an input.
+
+---
+
+### 2. `with` — Pass Values (Usage)
+
+`with` is used to **send values to an action or reusable workflow**.
+
+It supplies values to predefined inputs.
+
+---
+
+### Example — Passing Inputs to an Action
+
+```yaml id="79bgc1"
+- uses: Azure/login@v2
+  with:
+    client-id: ${{ secrets.AZURE_CLIENT_ID }}
+    tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+    subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+```
+
+Here:
+
+* `Azure/login` action already defines inputs.
+* `with` provides values to them.
+
+---
+
+### 3. Relationship Between `inputs` and `with`
+
+```text id="5ep9dp"
+inputs  → defines parameters
+with    → provides values to parameters
+```
+
+Like programming:
+
+```text id="08p5t6"
+function deploy(env)   ← inputs
+deploy("prod")         ← with
+```
+
+---
+
+### 4. Full Example (Reusable Workflow)
+
+### Reusable workflow
+
+```yaml id="pnq0an"
+# deploy.yml
+on:
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
+```
+
+---
+
+### Caller workflow
+
+```yaml id="xtju5n"
+jobs:
+  call-deploy:
+    uses: org/repo/.github/workflows/deploy.yml@main
+    with:
+      environment: prod
+```
+
+Flow:
+
+1. `inputs` defined in reusable workflow
+2. `with` sends value from caller
+
+---
+
+### 5. Where Each Is Used
+
+| Keyword  | Used Where                 | Purpose               |
+| -------- | -------------------------- | --------------------- |
+| `inputs` | workflow/action definition | Declare parameters    |
+| `with`   | step/job usage             | Pass parameter values |
+
+---
+
+### 6. Common Places You’ll See Them
+
+### A. Manual Run Parameters
+
+```yaml id="bs59i6"
+on:
+  workflow_dispatch:
+    inputs:
+```
+
+### B. Calling Actions
+
+```yaml id="0zddcc"
+- uses: actions/checkout@v4
+  with:
+```
+
+### C. Reusable Workflows
+
+```yaml id="kg4p7h"
+on:
+  workflow_call:
+    inputs:
+```
+
+---
+
+### 7. Quick DevOps Interview Answer
+
+**`inputs` define configurable parameters for workflows or actions, while `with` passes actual values to those inputs when executing an action or reusable workflow.**
+
+---
+
+### 8. Simple Memory Rule
+
+```text id="v2r0w9"
+inputs = declare variables
+with   = assign values
+```
+
+---
