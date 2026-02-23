@@ -1,6 +1,6 @@
 ## scheduling workflow in github actions
 
-'''
+```
 name: Scheduled Job
 
 on:
@@ -15,4 +15,4 @@ jobs:
       - uses: actions/checkout@v4
       - name: Run script
         run: echo "Scheduled workflow running"
-  '''
+  ```
