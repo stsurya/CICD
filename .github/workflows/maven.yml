@@ -1,5 +1,5 @@
 # File: .github/workflows/workflow.yml
-
+# Added comments
 name: Run Azure Login with OIDC
 on:
   push:
